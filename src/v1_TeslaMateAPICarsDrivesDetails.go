@@ -84,16 +84,16 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 	}
 	// AddressDetails struct - child of Drive
 	type AddressDetails struct {
-		AddressID          int         `json:"address_id"`           // integer
-		HouseNumber	   	   NullString  `json:"house_number"`         // string
-		Road	   	   	   NullString  `json:"road"`         	     // string
-		Neighbourhood	   NullString  `json:"neighbourhood"`        // string
-		City	   	   	   NullString  `json:"city"`         	     // string
-		County	           NullString  `json:"county"`         	     // string
-		PostCode	   	   NullString  `json:"post_code"`            // string
-		State	           NullString  `json:"state"`         	     // string
-		StateDistrict	   NullString  `json:"state_district"`       // string
-		Country	           NullString  `json:"country"`              // string
+		AddressID          int      `json:"address_id"`           // integer
+		HouseNumber	   *string  `json:"house_number"`         // text
+		Road	   	   *string  `json:"road"`         	     // text
+		Neighbourhood	   *string  `json:"neighbourhood"`        // text
+		City	   	   *string  `json:"city"`         	     // text
+		County	           *string  `json:"county"`         	     // text
+		PostCode	   *string  `json:"post_code"`            // text
+		State	           *string  `json:"state"`         	     // text
+		StateDistrict	   *string  `json:"state_district"`       // text
+		Country	           *string  `json:"country"`              // text
 	}
 	// Drive struct - child of Data
 	type Drive struct {

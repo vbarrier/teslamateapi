@@ -101,7 +101,9 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 		StartDate       	string          `json:"start_date"`       	// string
 		EndDate         	string          `json:"end_date"`         	// string
 		StartAddress    	string          `json:"start_address"`    	// string
+		StartAddressDetails 	AddressDetails  `json:"start_address_details"`  // struct
 		EndAddress     		string          `json:"end_address"`      	// string
+		EndAddressDetails	AddressDetails  `json:"end_address_details"`	// struct
 		OdometerDetails 	OdometerDetails `json:"odometer_details"` 	// OdometerDetails
 		DurationMin     	int             `json:"duration_min"`    	// int
 		DurationStr     	string          `json:"duration_str"`     	// string
@@ -115,8 +117,6 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 		OutsideTempAvg  	float64         `json:"outside_temp_avg"` 	// float64
 		InsideTempAvg   	float64         `json:"inside_temp_avg"`  	// float64
 		DriveDetails    	[]DriveDetails  `json:"drive_details"`    	// struct
-		StartAddressDetails 	AddressDetails  `json:"start_address_details"`  // struct
-		EndAddressDetails	AddressDetails  `json:"end_address_details"`	// struct
 	}
 	// TeslaMateUnits struct - child of Data
 	type TeslaMateUnits struct {

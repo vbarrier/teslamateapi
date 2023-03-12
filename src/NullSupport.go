@@ -68,7 +68,7 @@ type BetterNullString string
 
 func (s *BetterNullString) Scan(value interface{}) error {
     if value == nil {
-        *s = ""
+        *s = "null"
         return nil
     }
     strVal, ok := value.([]byte)

@@ -20,8 +20,8 @@ func TeslaMateAPICarsDrivesV1(c *gin.Context) {
 	// creating structs for /cars/<CarID>/drives
 	// Car struct - child of Data
 	type Car struct {
-		CarID   int    `json:"car_id"`   // smallint
-		CarName string `json:"car_name"` // text
+		CarID   int    	   `json:"car_id"`   // smallint
+		CarName NullString `json:"car_name"` // text
 	}
 	// AddressDetails struct - child of Drive
 	type AddressDetails struct {

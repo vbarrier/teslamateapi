@@ -101,6 +101,7 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 		StartDate       	string          `json:"start_date"`       	// string
 		EndDate         	string          `json:"end_date"`         	// string
 		StartAddress    	string          `json:"start_address"`    	// string
+		PostCode	   	NullString  	`json:"post_code"`            	// text
 		StartAddressDetails 	AddressDetails  `json:"start_address_details"`  // struct
 		EndAddress     		string          `json:"end_address"`      	// string
 		EndAddressDetails	AddressDetails  `json:"end_address_details"`	// struct
@@ -148,6 +149,7 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 			start_date,
 			end_date,
 			COALESCE(start_geofence.name, CONCAT_WS(', ', COALESCE(start_address.name, nullif(CONCAT_WS(' ', start_address.road, start_address.house_number), '')), start_address.city)) AS start_address_simple,
+			start_address.postcode,
 			start_address.id,
 			start_address.house_number,
 			start_address.road, 

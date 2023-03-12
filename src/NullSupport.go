@@ -6,6 +6,8 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"database/sql/driver"
+	"errors"
 )
 
 // NullInt64 is an alias for sql.NullInt64 data type
@@ -58,4 +60,28 @@ func (ns *NullString) MarshalJSON() ([]byte, error) {
 		return []byte("null"), nil
 	}
 	return json.Marshal(ns.String)
+}
+
+
+
+type BetterNullString string
+
+func (s *BetterNullString) Scan(value interface{}) error {
+    if value == nil {
+        *s = ""
+        return nil
+    }
+    strVal, ok := value.(string)
+    if !ok {
+        return errors.New("Column is not a string")
+    }
+    *s = BetterNullString(strVal)
+    return nil
+}
+
+func (s BetterNullString) Value() (driver.Value, error) {
+    if len(s) == 0 { // if nil or empty string
+        return nil, nil
+    }
+    return string(s), nil
 }

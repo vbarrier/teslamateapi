@@ -53,7 +53,7 @@ type NullString string
 
 func (s *NullString) Scan(value interface{}) error {
     if value == nil {
-        *s = "null"
+        *s = nil
         return nil
     }
     strVal, ok := value.(string)

@@ -214,6 +214,7 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 		&drive.StartDate,
 		&drive.EndDate,
 		&drive.StartAddress,
+		&drive.PostCode,
 		&drive.StartAddressDetails.AddressID,
 		&drive.StartAddressDetails.HouseNumber,
 		&drive.StartAddressDetails.Road,

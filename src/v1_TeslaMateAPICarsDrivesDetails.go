@@ -85,15 +85,15 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 	// AddressDetails struct - child of Drive
 	type AddressDetails struct {
 		AddressID          int         `json:"address_id"`           // integer
-		HouseNumber	   NullString  `json:"house_number"`         // text
-		Road	   	   NullString  `json:"road"`         	     // text
-		Neighbourhood	   NullString  `json:"neighbourhood"`        // text
-		City	   	   NullString  `json:"city"`         	     // text
-		County	           NullString  `json:"county"`         	     // text
-		PostCode	   NullString  `json:"post_code"`            // text
-		State	           NullString  `json:"state"`         	     // text
-		StateDistrict	   NullString  `json:"state_district"`       // text
-		Country	           NullString  `json:"country"`              // text
+		HouseNumber	   BetterNullString  `json:"house_number"`         // text
+		Road	   	   BetterNullString  `json:"road"`         	     // text
+		Neighbourhood	   BetterNullString  `json:"neighbourhood"`        // text
+		City	   	   BetterNullString  `json:"city"`         	     // text
+		County	           BetterNullString  `json:"county"`         	     // text
+		PostCode	   BetterNullString  `json:"post_code"`            // text
+		State	           BetterNullString  `json:"state"`         	     // text
+		StateDistrict	   BetterNullString  `json:"state_district"`       // text
+		Country	           BetterNullString  `json:"country"`              // text
 	}
 	// Drive struct - child of Data
 	type Drive struct {
@@ -101,7 +101,6 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 		StartDate       	string          `json:"start_date"`       	// string
 		EndDate         	string          `json:"end_date"`         	// string
 		StartAddress    	string          `json:"start_address"`    	// string
-		PostCode	   	NullString  	`json:"post_code"`            	// text
 		StartAddressDetails 	AddressDetails  `json:"start_address_details"`  // struct
 		EndAddress     		string          `json:"end_address"`      	// string
 		EndAddressDetails	AddressDetails  `json:"end_address_details"`	// struct
@@ -149,7 +148,6 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 			start_date,
 			end_date,
 			COALESCE(start_geofence.name, CONCAT_WS(', ', COALESCE(start_address.name, nullif(CONCAT_WS(' ', start_address.road, start_address.house_number), '')), start_address.city)) AS start_address_simple,
-			start_address.postcode,
 			start_address.id,
 			start_address.house_number,
 			start_address.road, 
@@ -214,7 +212,6 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 		&drive.StartDate,
 		&drive.EndDate,
 		&drive.StartAddress,
-		&drive.PostCode,
 		&drive.StartAddressDetails.AddressID,
 		&drive.StartAddressDetails.HouseNumber,
 		&drive.StartAddressDetails.Road,

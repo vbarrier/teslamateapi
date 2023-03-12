@@ -49,24 +49,9 @@ func (nf *NullFloat64) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nf.Float64)
 }
 
-// NullString is an alias for sql.NullString data type
-type NullString struct {
-	sql.NullString
-}
+type NullString string
 
-// MarshalJSON for NullString
-func (ns *NullString) MarshalJSON() ([]byte, error) {
-	if !ns.Valid {
-		return []byte("null"), nil
-	}
-	return json.Marshal(ns.String)
-}
-
-
-
-type BetterNullString string
-
-func (s *BetterNullString) Scan(value interface{}) error {
+func (s *NullString) Scan(value interface{}) error {
     if value == nil {
         *s = "null"
         return nil
@@ -75,11 +60,11 @@ func (s *BetterNullString) Scan(value interface{}) error {
     if !ok {
         return errors.New("Column is not a string")
     }
-    *s = BetterNullString(strVal)
+    *s = NullString(strVal)
     return nil
 }
 
-func (s BetterNullString) Value() (driver.Value, error) {
+func (s NullString) Value() (driver.Value, error) {
     if len(s) == 0 { // if nil or empty string
         return nil, nil
     }

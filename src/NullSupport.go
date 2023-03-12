@@ -71,7 +71,7 @@ func (s *BetterNullString) Scan(value interface{}) error {
         *s = "null"
         return nil
     }
-    strVal, ok := value.([]byte)
+    strVal, ok := value.(string)
     if !ok {
         return errors.New("Column is not a string")
     }

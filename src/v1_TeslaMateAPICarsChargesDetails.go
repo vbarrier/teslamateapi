@@ -110,7 +110,8 @@ func TeslaMateAPICarsChargesDetailsV1(c *gin.Context) {
 	var (
 		charge                                 Charge
 		ChargeDetailsData                      []ChargeDetails
-		UnitsLength, UnitsTemperature, CarName string
+		UnitsLength, UnitsTemperature 	       string
+		CarName 			       NullString
 	)
 
 	// getting data from database

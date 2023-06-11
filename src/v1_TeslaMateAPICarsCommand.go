@@ -74,11 +74,11 @@ func TeslaMateAPICarsCommandV1(c *gin.Context) {
 
 	// get TeslaVehicleID and TeslaAccessToken
 	query := `
-		SELECT
-			eid as TeslaVehicleID,
-			(SELECT access FROM tokens LIMIT 1) as TeslaAccessToken
-		FROM cars
-		WHERE id = $1
+	        SELECT
+		    eid as TeslaVehicleID,
+		    access as TeslaAccessToken
+		FROM cars, tokens
+		WHERE cars.id = $1 and cars.tokens_id = tokens.id
 		LIMIT 1;`
 	row := db.QueryRow(query, CarID)
 

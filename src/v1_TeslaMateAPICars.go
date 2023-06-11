@@ -57,6 +57,7 @@ func TeslaMateAPICarsV1(c *gin.Context) {
 	type Cars struct {
 		CarID            int              `json:"car_id"`            // smallint
 		Name             NullString       `json:"name"`              // text
+		TeslaAccount     string           `json:"tesla_account"`     // text
 		CarDetails       CarDetails       `json:"car_details"`       // struct
 		CarExterior      CarExterior      `json:"car_exterior"`      // struct
 		CarSettings      CarSettings      `json:"car_settings"`      // struct
@@ -78,29 +79,31 @@ func TeslaMateAPICarsV1(c *gin.Context) {
 	// getting data from database
 	query := `
 		SELECT
-			cars.id,
-			eid,
-			vid,
-			model,
-			efficiency,
-			inserted_at,
-			updated_at,
-			vin,
-			name,
-			trim_badging,
-			exterior_color,
-			spoiler_type,
-			wheel_type,
-			suspend_min,
-			suspend_after_idle_min,
-			req_not_unlocked,
-			free_supercharging,
-			use_streaming_api,
-			(SELECT COUNT(*) FROM charging_processes WHERE car_id=cars.id) as total_charges,
-			(SELECT COUNT(*) FROM drives WHERE car_id=cars.id) as total_drives,
-			(SELECT COUNT(*) FROM updates WHERE car_id=cars.id) as total_charges
+		    cars.id,
+		    eid,
+		    vid,
+		    model,
+		    efficiency,
+		    cars.inserted_at,
+		    cars.updated_at,
+		    vin,
+		    name,
+		    trim_badging,
+		    exterior_color,
+		    spoiler_type,
+		    wheel_type,
+		    suspend_min,
+		    suspend_after_idle_min,
+		    req_not_unlocked,
+		    free_supercharging,
+		    use_streaming_api,
+		    account_email,
+		    (SELECT COUNT(*) FROM charging_processes WHERE car_id=cars.id) as total_charges,
+		    (SELECT COUNT(*) FROM drives WHERE car_id=cars.id) as total_drives,
+		    (SELECT COUNT(*) FROM updates WHERE car_id=cars.id) as total_charges
 		FROM cars
-		LEFT JOIN car_settings ON cars.id = car_settings.id
+			 LEFT JOIN car_settings ON cars.id = car_settings.id
+			 LEFT JOIN tokens t on cars.tokens_id = t.id
 		ORDER BY id;`
 	rows, err := db.Query(query)
 
@@ -139,6 +142,7 @@ func TeslaMateAPICarsV1(c *gin.Context) {
 			&car.CarSettings.ReqNotUnlocked,
 			&car.CarSettings.FreeSupercharging,
 			&car.CarSettings.UseStreamingAPI,
+			&car.TeslaAccount,
 			&car.TeslaMateStats.TotalCharges,
 			&car.TeslaMateStats.TotalDrives,
 			&car.TeslaMateStats.TotalUpdates,

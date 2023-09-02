@@ -120,6 +120,7 @@ func initCommandAllowList() {
 		"/command/media_prev_fav",
 		"/command/media_volume_up",
 		"/command/media_volume_down",
+		"/command/adjust_volume",
 	}
 
 	// https://tesla-api.timdorr.com/vehicle/commands/sharing

@@ -23,8 +23,8 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 	// creating structs for /cars/<CarID>/drives/<DriveID>
 	// Car struct - child of Data
 	type Car struct {
-		CarID   int    	   `json:"car_id"`   // smallint
-		CarName NullString `json:"car_name"` // text
+		CarID   int        `json:"car_id"`   // smallint
+		CarName NullString `json:"car_name"` // text (nullable)
 	}
 	// OdometerDetails struct - child of Drives
 	type OdometerDetails struct {
@@ -136,10 +136,10 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 
 	// creating required vars
 	var (
-		drive                                  Drive
-		DriveDetailsData                       []DriveDetails
-		UnitsLength, UnitsTemperature	       string
-		CarName				       NullString
+		CarName                       NullString
+		drive                         Drive
+		DriveDetailsData              []DriveDetails
+		UnitsLength, UnitsTemperature string
 	)
 
 	// getting data from database
@@ -152,7 +152,7 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 			COALESCE(end_geofence.name, CONCAT_WS(', ', COALESCE(end_address.name, nullif(CONCAT_WS(' ', end_address.road, end_address.house_number), '')), end_address.city)) AS end_address_simple,
 			start_address.id,
 			start_address.house_number,
-			start_address.road, 
+			start_address.road,
 			start_address.neighbourhood,
 			start_address.city,
 			start_address.county,
@@ -162,7 +162,7 @@ func TeslaMateAPICarsDrivesDetailsV1(c *gin.Context) {
 			start_address.country,
 			end_address.id,
 			end_address.house_number,
-			end_address.road, 
+			end_address.road,
 			end_address.neighbourhood,
 			end_address.city,
 			end_address.county,

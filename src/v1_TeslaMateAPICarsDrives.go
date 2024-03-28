@@ -20,22 +20,22 @@ func TeslaMateAPICarsDrivesV1(c *gin.Context) {
 	// creating structs for /cars/<CarID>/drives
 	// Car struct - child of Data
 	type Car struct {
-		CarID   int    	   `json:"car_id"`   // smallint
-		CarName NullString `json:"car_name"` // text
+		CarID   int        `json:"car_id"`   // smallint
+		CarName NullString `json:"car_name"` // text (nullable)
 	}
 	// AddressDetails struct - child of Drive
-	type AddressDetails struct {
-		AddressID          int         `json:"address_id"`         // integer
-		HouseNumber	   NullString  `json:"house_number"`       // text
-		Road	   	   NullString  `json:"road"`         	   // text
-		Neighbourhood	   NullString  `json:"neighbourhood"`      // text
-		City	   	   NullString  `json:"city"`         	   // text
-		County	           NullString  `json:"county"`         	   // text
-		PostCode	   NullString  `json:"post_code"`          // text
-		State	           NullString  `json:"state"`         	   // text
-		StateDistrict	   NullString  `json:"state_district"`     // text
-		Country	           NullString  `json:"country"`            // text
-	}
+    type AddressDetails struct {
+        AddressID          int         `json:"address_id"`         // integer
+        HouseNumber	   NullString  `json:"house_number"`       // text
+        Road	   	   NullString  `json:"road"`         	   // text
+        Neighbourhood	   NullString  `json:"neighbourhood"`      // text
+        City	   	   NullString  `json:"city"`         	   // text
+        County	           NullString  `json:"county"`         	   // text
+        PostCode	   NullString  `json:"post_code"`          // text
+        State	           NullString  `json:"state"`         	   // text
+        StateDistrict	   NullString  `json:"state_district"`     // text
+        Country	           NullString  `json:"country"`            // text
+    }
 	// OdometerDetails struct - child of Drives
 	type OdometerDetails struct {
 		OdometerStart    float64 `json:"odometer_start"`    // float64
@@ -97,9 +97,9 @@ func TeslaMateAPICarsDrivesV1(c *gin.Context) {
 
 	// creating required vars
 	var (
-		DrivesData                             []Drives
-		UnitsLength, UnitsTemperature	       string
-		CarName 			       NullString
+		CarName                       NullString
+		DrivesData                    []Drives
+		UnitsLength, UnitsTemperature string
 	)
 
 	// calculate offset based on page (page 0 is not possible, since first page is minimum 1)
@@ -120,7 +120,7 @@ func TeslaMateAPICarsDrivesV1(c *gin.Context) {
 			COALESCE(end_geofence.name, CONCAT_WS(', ', COALESCE(end_address.name, nullif(CONCAT_WS(' ', end_address.road, end_address.house_number), '')), end_address.city)) AS end_address,
 			start_address.id,
 			start_address.house_number,
-			start_address.road, 
+			start_address.road,
 			start_address.neighbourhood,
 			start_address.city,
 			start_address.county,
@@ -130,7 +130,7 @@ func TeslaMateAPICarsDrivesV1(c *gin.Context) {
 			start_address.country,
 			end_address.id,
 			end_address.house_number,
-			end_address.road, 
+			end_address.road,
 			end_address.neighbourhood,
 			end_address.city,
 			end_address.county,

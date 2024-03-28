@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -16,7 +16,7 @@ func initCommandAllowList() {
 	// generate map of all available commands
 	CommandList := make(map[string][]string)
 
-	// https://github.com/adriankumpf/teslamate/discussions/1433
+	// https://github.com/teslamate-org/teslamate/discussions/1433
 	CommandList["COMMANDS_LOGGING"] = []string{
 		"/logging/resume",
 		"/logging/suspend",
@@ -109,6 +109,10 @@ func initCommandAllowList() {
 		"/command/set_bioweapon_mode",
 		"/command/set_climate_keeper_mode",
 		"/command/remote_auto_seat_climate_request",
+		"/command/set_cop_temp",
+		"/command/set_cabin_overheat_protection",
+		"/command/remote_auto_steering_wheel_heat_climate_request", // missing documentation
+		"/command/remote_steering_wheel_heat_level_request",        // missing documentation
 	}
 
 	// https://tesla-api.timdorr.com/vehicle/commands/media
@@ -126,7 +130,6 @@ func initCommandAllowList() {
 	// https://tesla-api.timdorr.com/vehicle/commands/sharing
 	CommandList["COMMANDS_SHARING"] = []string{
 		"/command/share",
-		"/command/navigation_sc_request",
 	}
 
 	// https://tesla-api.timdorr.com/vehicle/commands/softwareupdate
@@ -139,6 +142,16 @@ func initCommandAllowList() {
 	CommandList["COMMANDS_UNKNOWN"] = []string{
 		"/command/upcoming_calendar_entries",
 		"/command/dashcam_save_clip",
+		"/command/navigation_sc_request",
+		"/command/remote_boombox",
+		"/command/get_active_route",
+		"/command/get_managed_charging_sites",
+		"/command/add_managed_charging_site",
+		"/command/remove_managed_charging_site",
+		"/command/update_charge_on_solar_feature",
+		"/command/get_charge_on_solar_feature",
+		"/command/take_drivenote",
+		"/command/navigation_gps_request",
 	}
 
 	// allow all commands available below
@@ -160,20 +173,23 @@ func initCommandAllowList() {
 		commandAllowListFile, err := os.Open(commandAllowListLocation)
 		if err != nil {
 			log.Println("[error] getAllowList error with COMMANDS_ALLOWLIST: " + commandAllowListLocation + " not found and will be ignored")
-		} else {
-			defer commandAllowListFile.Close()
-			byteValue, err := ioutil.ReadAll(commandAllowListFile)
-			if err != nil {
-				log.Println("[error] getAllowList error while reading COMMANDS_ALLOWLIST: " + commandAllowListLocation + " it will be ignored")
-			} else {
-				err = json.Unmarshal(byteValue, &allowListFile)
-				if err != nil {
-					log.Println("[error] getAllowList error while parsing JSON.. COMMANDS_ALLOWLIST: " + commandAllowListLocation + " it will be ignored")
-				} else {
-					allowList = append(allowList, allowListFile...)
-				}
-			}
+			return
 		}
+
+		defer commandAllowListFile.Close()
+		byteValue, err := io.ReadAll(commandAllowListFile)
+		if err != nil {
+			log.Println("[error] getAllowList error while reading COMMANDS_ALLOWLIST: " + commandAllowListLocation + " it will be ignored")
+			return
+		}
+
+		err = json.Unmarshal(byteValue, &allowListFile)
+		if err != nil {
+			log.Println("[error] getAllowList error while parsing JSON.. COMMANDS_ALLOWLIST: " + commandAllowListLocation + " it will be ignored")
+			return
+		}
+
+		allowList = append(allowList, allowListFile...)
 	} else {
 		log.Print("[info] getAllowList COMMANDS from environment variables set, " + commandAllowListLocation + " will be ignored.")
 	}

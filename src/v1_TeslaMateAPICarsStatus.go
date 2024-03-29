@@ -45,7 +45,7 @@ type statusInfo struct {
 	MQTTDataTrunkOpen                  bool
 	MQTTDataFrunkOpen                  bool
 	MQTTDataIsUserPresent              bool
-	MQTTDataValetMode	           bool
+	MQTTDataValetMode	               bool
 	MQTTDataIsClimateOn                bool
 	MQTTDataInsideTemp                 float64
 	MQTTDataOutsideTemp                float64
@@ -79,6 +79,7 @@ type statusInfo struct {
 	MQTTDataActiveRouteDestination     string
 	MQTTDataActiveRouteLatitude        float64
 	MQTTDataActiveRouteLongitude       float64
+	MQTTDataLocation                   string
 }
 
 type statusCache struct {
@@ -354,7 +355,9 @@ func (s *statusCache) newMessage(c mqtt.Client, msg mqtt.Message) {
 		stat.MQTTDataActiveRouteLatitude = convertStringToFloat(string(msg.Payload()))
 	case "active_route_longitude":
 		stat.MQTTDataActiveRouteLongitude = convertStringToFloat(string(msg.Payload()))
-	default:
+	case "location":
+		stat.MQTTDataLocation = string(msg.Payload())
+    default:
 		log.Printf("[warning] TeslaMateAPICarsStatusV1 mqtt.MessageHandler issue.. extraction of data for %s not implemented!", MqttTopic)
 	}
 }
@@ -424,6 +427,7 @@ func (s *statusCache) TeslaMateAPICarsStatusV1(c *gin.Context) {
 		FrunkOpen     bool `json:"frunk_open"`      // false - Indicates if the frunk is open
 		IsUserPresent bool `json:"is_user_present"` // false - Indicates if a user is present in the vehicle
 		ValetMode     bool `json:"valet_mode"`      // false - Indicates if a Valet Mode is active
+		Location    string `json:"location"`        // {} - Indicates Location
 	}
 	// CarVersions struct - child of MQTTInformation
 	type CarVersions struct {
@@ -573,6 +577,7 @@ func (s *statusCache) TeslaMateAPICarsStatusV1(c *gin.Context) {
 	MQTTInformationData.CarStatus.FrunkOpen = stat.MQTTDataFrunkOpen
 	MQTTInformationData.CarStatus.IsUserPresent = stat.MQTTDataIsUserPresent
 	MQTTInformationData.CarStatus.ValetMode = stat.MQTTDataValetMode
+    MQTTInformationData.CarStatus.Location = stat.MQTTDataLocation
 	MQTTInformationData.ClimateDetails.IsClimateOn = stat.MQTTDataIsClimateOn
 	MQTTInformationData.ClimateDetails.InsideTemp = stat.MQTTDataInsideTemp
 	MQTTInformationData.ClimateDetails.OutsideTemp = stat.MQTTDataOutsideTemp
